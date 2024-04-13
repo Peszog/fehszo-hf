@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+</head>
+<body>
+    <h1>Upload Image</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*" required><br>
+        <textarea name="description" placeholder="Description" required></textarea><br>
+        <button type="submit">Upload</button>
+    </form>
+
+    <h2>Uploaded Images</h2>
+    <ul>
+        {% for picture in pictures %}
+            <li>
+                <img src="{{ url_for('uploaded_file', filename=picture.filename) }}" alt="{{ picture.description }}" style="max-width: 200px;">
+                <p>{{ picture.description }}</p>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,88 @@
+from flask import Flask, render_template, request, redirect, url_for, send_from_directory
+from flask_sqlalchemy import SQLAlchemy
+from ultralytics import YOLO
+import os
+from PIL import Image, ImageDraw
+
+app = Flask(__name__)
+
+# Configure SQLite database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///pictures.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['UPLOAD_FOLDER'] = 'uploads'
+
+db = SQLAlchemy(app)
+model = YOLO('yolov8n.pt')
+
+# Define the Picture model
+class Picture(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+
+# Create uploads folder if not exists
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
+
+@app.route('/')
+def index():
+    # Fetch all pictures from the database
+    pictures = Picture.query.all()
+    return render_template('index.html', pictures=pictures)
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    if request.method == 'POST':
+        # Get the uploaded file
+        file = request.files['file']
+        description = request.form['description']
+
+        if file:
+            # Save the file to the uploads folder
+            filename = file.filename
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(filepath)
+
+            # Perform vehicle detection
+            detect_image(filepath)
+
+            # Store the file details in the database
+            new_picture = Picture(filename=filename, description=description)
+            db.session.add(new_picture)
+            db.session.commit()
+
+            return redirect(url_for('index'))
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+
+def detect_image(filepath):
+    # Load the image
+    img = Image.open(filepath)
+
+    # Perform inference
+    results = model.predict(img)
+
+    # Process the results and draw bounding boxes
+    for result in results:
+        # Iterate over each detected box
+        for box, conf, cls in zip(result.boxes.xyxy, result.boxes.conf, result.boxes.cls):
+            # If the detected class is a vehicle
+            if cls == 2:  # Assuming class ID 2 represents a vehicle
+                # Extract box coordinates
+                x1, y1, x2, y2 = box
+
+                # Draw bounding box on the image
+                draw = ImageDraw.Draw(img)
+                draw.rectangle([x1, y1, x2, y2], outline="red", width=2)
+
+    # Save the modified image
+    img.save(filepath)
+
+if __name__ == '__main__':
+    with app.app_context():
+        # Create SQLite database tables
+        db.create_all()
+    app.run(host="0.0.0.0", port=5000, debug=True)
