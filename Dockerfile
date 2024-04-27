@@ -12,6 +12,7 @@ COPY ./requirements.txt /app
 RUN pip install --no-cache-dir -r /app/requirements.txt
 RUN apt-get update && apt-get install -y libgl1-mesa-glx
 RUN apt-get install -y libglib2.0-dev
+RUN pip install kafka-python
 
 COPY . .
 
