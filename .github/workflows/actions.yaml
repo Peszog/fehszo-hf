@@ -31,7 +31,7 @@ jobs:
           $SourceDiff = $diff | Where-Object { $_ -match '^app/'}
           $HasDiff = $SourceDiff.Length -gt 0
           
-          echo "docs_changed=$HasDiff" >> $GITHUB_ENV
+          Write-Output "docs_changed=$HasDiff" >> $GITHUB_ENV
 
           echo "=============================="
           echo "Files changed: $HasDiff"

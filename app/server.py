@@ -37,6 +37,7 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 def health():
     return "OK"
 
+# Starting page
 @app.route('/')
 def index():
     # Fetch all pictures from the database
