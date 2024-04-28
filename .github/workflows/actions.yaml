@@ -24,14 +24,11 @@ jobs:
       - name: Determine if Docker build is necessary
         id: check_changes
         run: |
-          # Diff HEAD with the previous commit
           $diff = git diff --name-only HEAD^ HEAD
 
-          # Check if a file under app/ has changed (added, modified, deleted)
           $SourceDiff = $diff | Where-Object { $_ -match '^app/'}
           $HasDiff = $SourceDiff.Length -gt 0
 
-          # Set the output named "docs_changed"
           $echo "{docs_changed}={$HasDiff}" >> $GITHUB_OUTPUT
 
       - name: Login to Docker Hub
