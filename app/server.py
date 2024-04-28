@@ -7,9 +7,9 @@ from kafka import KafkaProducer
 import atexit
 
 kafka_host = os.environ.get('KAFKA_BROKER_HOST')
-kafka_port = os.environ.get('KAFKA_BROKER_PORT')
+# kafka_port = os.environ.get('KAFKA_BROKER_PORT')
 kafka_topic = "test"
-producer = KafkaProducer(bootstrap_servers = f"{kafka_host}:{kafka_port}")
+producer = KafkaProducer(bootstrap_servers = f"{kafka_host}:9092")
 
 app = Flask(__name__)
 
