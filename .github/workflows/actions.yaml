@@ -23,13 +23,14 @@ jobs:
 
       - name: Determine if Docker build is necessary
         id: check_changes
+        shell: pwsh
         run: |
-          $diff = git diff --name-only HEAD^ HEAD
+          diff = $(git diff --name-only HEAD^ HEAD)
 
-          $SourceDiff = $diff | Where-Object { $_ -match '^app/'}
-          $HasDiff = $SourceDiff.Length -gt 0
+          SourceDiff = $($diff | Where-Object { $_ -match '^app/'})
+          HasDiff = $($SourceDiff.Length -gt 0)
 
-          $echo "{docs_changed}={$HasDiff}" >> $GITHUB_OUTPUT
+          echo "{docs_changed}={$HasDiff}" >> $GITHUB_OUTPUT
 
       - name: Login to Docker Hub
         if: ${{ steps.check_changes.outputs.docs_changed }} == 'true'
