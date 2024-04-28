@@ -30,8 +30,11 @@ jobs:
           # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
           $SourceDiff = $diff | Where-Object { $_ -match '^app/'}
           $HasDiff = $SourceDiff.Length -gt 0
-
+          
           echo "docs_changed=$HasDiff" >> $GITHUB_OUTPUT
+          echo "=============================="
+          echo $HasDiff
+          echo $GITHUB_OUTPUT
 
       - name: Login to Docker Hub
         if: ${{ steps.check_changes.outputs.docs_changed }} == 'true'
