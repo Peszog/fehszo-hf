@@ -6,8 +6,8 @@ from PIL import Image, ImageDraw
 from kafka import KafkaProducer
 import atexit
 
-kafka_host = "hardcore_newton"
-kafka_port = "9092"
+kafka_host = os.environ.get('KAFKA_BROKER_HOST')
+kafka_port = os.environ.get('KAFKA_BROKER_PORT')
 kafka_topic = "test"
 producer = KafkaProducer(bootstrap_servers = f"{kafka_host}:{kafka_port}")
 
