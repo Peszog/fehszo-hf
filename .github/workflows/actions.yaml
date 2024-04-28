@@ -34,7 +34,7 @@ jobs:
           echo "docs_changed=$HasDiff" >> $GITHUB_OUTPUT
           echo "=============================="
           echo $HasDiff
-          echo ${{ steps.check_changes.outputs.docs_changed }}
+          echo "The saved value is: ${{ steps.check_changes.outputs.docs_changed }}"
 
       - name: Login to Docker Hub
         if: ${{ steps.check_changes.outputs.docs_changed }} == 'true'
