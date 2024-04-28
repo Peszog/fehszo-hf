@@ -31,10 +31,12 @@ jobs:
           $SourceDiff = $diff | Where-Object { $_ -match '^app/'}
           $HasDiff = $SourceDiff.Length -gt 0
           
-          echo "docs_changed=$HasDiff" >> $GITHUB_OUTPUT
+          echo "docs_changed=$HasDiff" >> $GITHUB_ENV
 
           echo "=============================="
           echo "Files changed: $HasDiff"
+
+          echo "${{ env.DOCS_CHANGED }}"
 
       - name: Login to Docker Hub
         if: steps.check_changes.outputs.docs_changed == 'True'
@@ -44,7 +46,7 @@ jobs:
           password: ${{ env.DOCKERHUB_KEY }}
 
       - name: Build Docker image
-        if: steps.check_changes.outputs.docs_changed == 'True'
+        if: ${{ env.DOCS_CHANGED == 'True' }}
         run: |
           echo "The saved value is: ${{ steps.check_changes.outputs.docs_changed }}"
           cd ./app && docker build -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
