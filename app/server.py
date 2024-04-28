@@ -32,6 +32,10 @@ class Picture(db.Model):
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
 
+@app.route("/health")
+def health():
+    return "OK"
+
 @app.route('/')
 def index():
     # Fetch all pictures from the database
