@@ -36,7 +36,11 @@ jobs:
           echo "=============================="
           echo "Files changed: $HasDiff"
 
+          echo $docs_changed
           echo "${{ env.DOCS_CHANGED }}"
+
+          Write-Output "docs_changed=$HasDiff" >> $GITHUB_OUTPUT
+          echo $docs_changed
 
       - name: Login to Docker Hub t
         if: ${{ env.DOCS_CHANGED == 'true' }}
