@@ -73,7 +73,7 @@ def upload():
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-
+# Image detection
 def detect_image(filepath):
     # Load the image
     img = Image.open(filepath)
