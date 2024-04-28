@@ -95,7 +95,7 @@ def detect_image(filepath):
 
     return carcount
 
-
+# Send message to kafka broker
 def send_message_to_topic(imageDescription, carCount):
     producer.send(kafka_topic, value=f"An image has been uploaded containing {carCount} vehicles with the following description: {imageDescription}".encode())
     print("Image upload message sent to topic")
