@@ -53,8 +53,8 @@ jobs:
       - name: Build Docker image
         if: steps.check_changes.outputs.docs_changed == 'True'
         run: |
-        echo "The saved value is: ${{ steps.check_changes.outputs.docs_changed }}"
-        cd ./app && docker build -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
+          echo "The saved value is: ${{ steps.check_changes.outputs.docs_changed }}"
+          cd ./app && docker build -t ${{ env.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
 
       - name: Push Docker image
         if: ${{ steps.check_changes.outputs.docs_changed }} == 'True'
