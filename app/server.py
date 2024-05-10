@@ -17,13 +17,15 @@ def ConnectToBroker(retryCount):
             producer = KafkaProducer(bootstrap_servers = f"kafka-broker-svc:9092")
             return producer
         except:
+            print("Connecting to broker failed, ")
             sleep(5)
     return None
 
 producer = ConnectToBroker(5)
 if producer == None:
-    raise ValueError("Producer aka kafka broker was none, meaning connection error")
-print("Connected to broker")
+    print("Producer aka kafka broker was none, meaning connection error")
+else:
+    print("Connected to broker")
 
 kafka_topic = "test"
 
