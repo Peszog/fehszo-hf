@@ -7,9 +7,6 @@ from PIL import Image, ImageDraw
 from kafka import KafkaProducer
 import atexit
 
-
-
-
 def ConnectToBroker(retryCount):
     for _ in range(retryCount):
         try:
