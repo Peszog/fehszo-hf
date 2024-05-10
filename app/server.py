@@ -14,13 +14,13 @@ def ConnectToBroker(retryCount):
             # kafka_port = os.environ.get('KAFKA_BROKER_PORT')
             # print(f"kafka_host: {kafka_host}")
             # print(f"kafka_port: {kafka_port}")
-            producer = KafkaProducer(bootstrap_servers = f"kafka-broker:9092")
+            producer = KafkaProducer(bootstrap_servers = f"kafka-broker-svc:9092")
             return producer
         except:
             sleep(5)
     return None
 
-producer = ConnectToBroker(5)
+producer = ConnectToBroker(20)
 if producer == None:
     raise ValueError("Producer aka kafka broker was none, meaning connection error")
 
