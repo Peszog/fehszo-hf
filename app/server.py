@@ -10,17 +10,17 @@ import atexit
 def ConnectToBroker(retryCount):
     for _ in range(retryCount):
         try:
-            kafka_host = os.environ.get('KAFKA_BROKER_HOST')
-            kafka_port = os.environ.get('KAFKA_BROKER_PORT')
-            print(f"kafka_host: {kafka_host}")
-            print(f"kafka_port: {kafka_port}")
-            producer = KafkaProducer(bootstrap_servers = f"{kafka_host}:9092")
+            # kafka_host = os.environ.get('KAFKA_BROKER_HOST')
+            # kafka_port = os.environ.get('KAFKA_BROKER_PORT')
+            # print(f"kafka_host: {kafka_host}")
+            # print(f"kafka_port: {kafka_port}")
+            producer = KafkaProducer(bootstrap_servers = f"argo-app:9092")
             return producer
         except:
             sleep(5)
     return None
 
-producer = ConnectToBroker(10)
+producer = ConnectToBroker(5)
 if producer == None:
     raise ValueError("Producer aka kafka broker was none, meaning connection error")
 

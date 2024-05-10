@@ -9,5 +9,9 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
+    - port: 9092
+      targetPort: kafka
+      protocol: TCP
+      name: kafka
   selector:
     app: argo-app
