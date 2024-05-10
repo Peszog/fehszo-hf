@@ -14,7 +14,7 @@ def ConnectToBroker(retryCount):
             # kafka_port = os.environ.get('KAFKA_BROKER_PORT')
             # print(f"kafka_host: {kafka_host}")
             # print(f"kafka_port: {kafka_port}")
-            producer = KafkaProducer(bootstrap_servers = f"localhost:9092")
+            producer = KafkaProducer(bootstrap_servers = f"kafka-broker:9092")
             return producer
         except:
             sleep(5)
