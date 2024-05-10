@@ -1,3 +1,4 @@
+from time import sleep
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from ultralytics import YOLO
@@ -6,10 +7,27 @@ from PIL import Image, ImageDraw
 from kafka import KafkaProducer
 import atexit
 
-kafka_host = os.environ.get('KAFKA_BROKER_HOST')
-# kafka_port = os.environ.get('KAFKA_BROKER_PORT')
+
+
+
+def ConnectToBroker(retryCount):
+    for _ in range(retryCount):
+        try:
+            kafka_host = os.environ.get('KAFKA_BROKER_HOST')
+            kafka_port = os.environ.get('KAFKA_BROKER_PORT')
+            print(f"kafka_host: {kafka_host}")
+            print(f"kafka_port: {kafka_port}")
+            producer = KafkaProducer(bootstrap_servers = f"{kafka_host}:9092")
+            return producer
+        except:
+            sleep(5)
+    return None
+
+producer = ConnectToBroker(10)
+if producer == None:
+    raise ValueError("Producer aka kafka broker was none, meaning connection error")
+
 kafka_topic = "test"
-producer = KafkaProducer(bootstrap_servers = f"{kafka_host}:9092")
 
 app = Flask(__name__)
 
