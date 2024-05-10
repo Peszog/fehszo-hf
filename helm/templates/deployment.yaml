@@ -35,7 +35,27 @@ spec:
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 3
-
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      securityContext:
+      fsGroup: 2000
+      
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-broker
+spec:
+  selector:
+    matchLabels:
+      app: kafka-broker
+  template:
+    metadata:
+      labels:
+        app: kafka-broker
+    spec:
+      containers:
         - name: kafka-broker
           image: bashj79/kafka-kraft
           ports:
