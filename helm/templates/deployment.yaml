@@ -37,7 +37,7 @@ spec:
             failureThreshold: 3
           resources:
             limits:
-              memory: "2048Mi"
+              memory: "4096Mi"
 
       dnsPolicy: ClusterFirst
       restartPolicy: Always
