@@ -20,9 +20,10 @@ def ConnectToBroker(retryCount):
             sleep(5)
     return None
 
-producer = ConnectToBroker(20)
+producer = ConnectToBroker(5)
 if producer == None:
     raise ValueError("Producer aka kafka broker was none, meaning connection error")
+print("Connected to broker")
 
 kafka_topic = "test"
 
@@ -35,6 +36,7 @@ app.config['UPLOAD_FOLDER'] = 'uploads'
 
 db = SQLAlchemy(app)
 model = YOLO('yolov8n.pt')
+print("db and model loaded")
 
 # Define the Picture model
 class Picture(db.Model):
@@ -46,6 +48,7 @@ class Picture(db.Model):
 # Create uploads folder if not exists
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
+print("created upload folder")
 
 # Health check
 @app.route("/health")
@@ -128,6 +131,3 @@ with app.app_context():
     # Create SQLite database tables
     db.create_all()
     atexit.register(shutdown)
-
-# if __name__ == '__main__':
-    # app.run(host="0.0.0.0", port=5000, debug=True) # not needed if Dockerfile is with "CMD ["flask", "run", "--host", "0.0.0.0"]"

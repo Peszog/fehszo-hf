@@ -35,12 +35,16 @@ spec:
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 3
+          resources:
+            limits:
+              memory: "2048Mi"
+
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       terminationGracePeriodSeconds: 30
       securityContext:
       fsGroup: 2000
-      
+
 ---
 apiVersion: apps/v1
 kind: Deployment
