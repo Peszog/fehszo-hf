@@ -7,28 +7,27 @@ from PIL import Image, ImageDraw
 from kafka import KafkaProducer
 import atexit
 
+# Tries to connect to the kafka broker periodically for given number of attempts.
 def ConnectToBroker(retryCount):
     for _ in range(retryCount):
         try:
-            # kafka_host = os.environ.get('KAFKA_BROKER_HOST')
-            # kafka_port = os.environ.get('KAFKA_BROKER_PORT')
-            # print(f"kafka_host: {kafka_host}")
-            # print(f"kafka_port: {kafka_port}")
-            producer = KafkaProducer(bootstrap_servers = f"kafka-broker-svc:9092")
+            producer = KafkaProducer(bootstrap_servers = "kafka-broker-svc:9092")
             return producer
         except:
-            print("Connecting to broker failed, ")
+            print("Connecting to broker failed")
             sleep(5)
     return None
 
 producer = ConnectToBroker(5)
 if producer == None:
-    print("Producer aka kafka broker was none, meaning connection error")
+    raise Exception("Producer aka kafka broker was none, meaning connection error")
 else:
     print("Connected to broker")
 
-kafka_topic = "test"
+# Predefined kafka topic
+kafka_topic = "serverUploads"
 
+# Create flask application instance
 app = Flask(__name__)
 
 # Configure SQLite database
@@ -126,6 +125,7 @@ def send_message_to_topic(imageDescription, carCount):
     producer.send(kafka_topic, value=f"An image has been uploaded containing {carCount} vehicles with the following description: {imageDescription}".encode())
     print("Image upload message sent to topic")
 
+# Close connection to broker
 def shutdown():
     producer.close()
 
