@@ -3,3 +3,5 @@ instance
 scripts/consumer
 scripts/producer
 helm/templates/test.yaml
+helm/templates/justBroker.yaml
+app/miniserver.py

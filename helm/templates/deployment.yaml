@@ -47,10 +47,14 @@ spec:
 
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: kafka-broker
+  name: kafka
+  labels:
+    app: kafka-broker
 spec:
+  serviceName: kafka-svc
+  replicas: 1
   selector:
     matchLabels:
       app: kafka-broker
@@ -60,16 +64,31 @@ spec:
         app: kafka-broker
     spec:
       containers:
-        - name: kafka-broker
-          image: bashj79/kafka-kraft
+        - name: kafka-container
+          image:  bashj79/kafka-kraft
           ports:
-            - containerPort: 9092
-              name: kafka-broker
-          command: ["/bin/sh", "-c"]
-          args:
-            - "sleep infinity"
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
-      terminationGracePeriodSeconds: 30
-      securityContext:
-      fsGroup: 2000
+            - name: kafka
+              containerPort: 9092
+          env:
+            - name: REPLICAS
+              value: '1'
+            - name: SERVICE
+              value: kafka
+            - name: SHARE_DIR
+              value: /mnt/kafka
+            - name: CLUSTER_ID
+              value: oh-sxaDRTcyAr6pFRbXyzA
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: PLAINTEXT://kafka-broker-svc:9092
+          volumeMounts:
+            - name: data
+              mountPath: /mnt/kafka
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "1Gi"
